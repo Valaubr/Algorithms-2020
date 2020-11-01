@@ -1,8 +1,7 @@
 package lesson1;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("WeakerAccess")
 public class Sorts {
@@ -138,6 +137,22 @@ public class Sorts {
         for (int j = elements.length - 1; j >= 0; j--) {
             out[count[elements[j]] - 1] = elements[j];
             count[elements[j]]--;
+        }
+        return out;
+    }
+
+    public static int[] countingSort(List<Integer> elements, AtomicInteger limit) {
+        int[] count = new int[limit.get() + 1];
+        for (Integer element: elements) {
+            count[element]++;
+        }
+        for (int j = 1; j <= limit.get(); j++) {
+            count[j] += count[j - 1];
+        }
+        int[] out = new int[elements.size()];
+        for (int j = elements.size() - 1; j >= 0; j--) {
+            out[count[elements.get(j)] - 1] = elements.get(j);
+            count[elements.get(j)]--;
         }
         return out;
     }
