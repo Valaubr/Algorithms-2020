@@ -347,7 +347,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          * <p>
          * Сложная
          * memory - O(1)
-         * complexity: bad - O(N), best = O(logN), N - tree height
+         * complexity: bad - O(N), best - O(logN), N - tree height
          */
         @Override
         public void remove() {
