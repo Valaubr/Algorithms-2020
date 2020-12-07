@@ -4,8 +4,6 @@ import kotlin.NotImplementedError;
 
 import java.util.*;
 
-import static java.util.Collections.binarySearch;
-
 @SuppressWarnings("unused")
 public class JavaDynamicTasks {
     /**
@@ -78,15 +76,15 @@ public class JavaDynamicTasks {
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.isEmpty() || list.size() == 1) return list;
 
-        var tailIndices = new int[list.size()];
-        var prevIndices = new int[list.size()];
+        int[] tailIndices = new int[list.size()];
+        int[] prevIndices = new int[list.size()];
 
         for (int i = 0; i < list.size(); i++) {
             tailIndices[i] = 1;
             prevIndices[i] = -1;
         }
 
-        var lastIndex = 0;
+        int lastIndex = 0;
 
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < i; j++) {
@@ -99,18 +97,18 @@ public class JavaDynamicTasks {
         }
 
 
-        var subSequence = new ArrayList<Integer>();
+        List<Integer> out = new ArrayList<Integer>();
 
         while (lastIndex != -1) {
-            subSequence.add(list.get(lastIndex));
+            out.add(list.get(lastIndex));
             lastIndex = prevIndices[lastIndex];
         }
-        for (int i = 0; i < subSequence.size() / 2; i++) {
-            int temp = subSequence.get(i);
-            subSequence.set(i, subSequence.get(subSequence.size() - i - 1));
-            subSequence.set(subSequence.size() - i - 1, temp);
+        for (int i = 0; i < out.size() / 2; i++) {
+            int temp = out.get(i);
+            out.set(i, out.get(out.size() - i - 1));
+            out.set(out.size() - i - 1, temp);
         }
-        return subSequence;
+        return out;
     }
 
     /**

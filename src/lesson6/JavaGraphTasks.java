@@ -73,10 +73,10 @@ public class JavaGraphTasks {
             return graph;
         }
 
-        var edgeList = new ArrayList<Graph.Edge>();
-        var vertexSet = new ArrayList<Graph.Vertex>();
+        List<Graph.Edge> edgeList = new ArrayList<>();
+        Set<Graph.Vertex> vertexSet = new HashSet<>();
 
-        for (var vertex : graph.getVertices()) {
+        for (Graph.Vertex vertex : graph.getVertices()) {
             graph.getConnections(vertex).forEach((vertex1, edge) -> {
                 if (!vertexSet.contains(vertex1)) {
                     vertexSet.add(vertex1);
@@ -85,7 +85,7 @@ public class JavaGraphTasks {
             });
         }
 
-        var out = new GraphBuilder();
+        GraphBuilder out = new GraphBuilder();
         for (Graph.Edge edge : edgeList) {
             out.addVertex(edge.getBegin().getName());
             out.addConnection(edge.getBegin(), edge.getEnd(), 1);
