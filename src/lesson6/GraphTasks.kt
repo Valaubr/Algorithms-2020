@@ -118,7 +118,6 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  */
 fun Graph.longestSimplePath(): Path {
     TODO()
-
 }
 
 /**
