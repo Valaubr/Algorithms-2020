@@ -2,6 +2,8 @@
 
 package lesson6
 
+import java.util.*
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -115,7 +117,16 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
  */
 fun Graph.longestSimplePath(): Path {
-    TODO()
+    var answer = Path()
+    val possiblePaths = Stack<Path>()
+    vertices.forEach { possiblePaths.push(Path(it)) }
+    while (possiblePaths.isNotEmpty()) {
+        val currentPath = possiblePaths.pop()
+        if (answer.length < currentPath.length) answer = currentPath
+        val neighbours = getNeighbors(currentPath.vertices[currentPath.length])
+        neighbours.forEach { if (it !in currentPath) possiblePaths.push(Path(currentPath, this, it)) }
+    }
+    return answer
 }
 
 /**

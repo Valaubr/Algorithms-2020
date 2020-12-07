@@ -103,7 +103,7 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
-     * memory: O(k)
+     * memory: O(nk)
      * complexity: O(NK): n - first, k - second
      */
     static public String longestCommonSubstring(@NotNull String first, @NotNull String second) {

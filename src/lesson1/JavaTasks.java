@@ -74,40 +74,39 @@ public class JavaTasks {
      * complexity: O(N*logN)
      */
     static public void sortAddresses(@NotNull final String inputName, @NotNull final String outputName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(inputName, StandardCharsets.UTF_8));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outputName, StandardCharsets.UTF_8));
-        SortedMap<String, String> map = new TreeMap<>((o1, o2) -> {
-            final String[] first = o1.split(" ");
-            final String[] twelve = o2.split(" ");
-            if (first[0].equals(twelve[0])) {
-                return Integer.compare(Integer.parseInt(first[1]), Integer.parseInt(twelve[1]));
-            } else {
-                return first[0].compareTo(twelve[0]);
-            }
-        });
-        br.lines().forEach(s -> {
-            String[] keyValue = s.strip().split(" - ");
-            if (!map.containsKey(keyValue[1])) {
-                map.put(keyValue[1], keyValue[0]);
-            } else {
-                map.put(keyValue[1], map.get(keyValue[1]) + ", " + keyValue[0]);
-            }
-        });
-        map.forEach((s, s2) -> {
-            try {
-                String[] arr = s2.strip().split(", ");
-                if (arr.length > 1) {
-                    Arrays.sort(arr); //MergeSort, в принципе может конечно аж до GC раздуться, но в условиях данной задачи - допустимо
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName, StandardCharsets.UTF_8));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(outputName, StandardCharsets.UTF_8))) {
+            SortedMap<String, String> map = new TreeMap<>((o1, o2) -> {
+                final String[] first = o1.split(" ");
+                final String[] twelve = o2.split(" ");
+                if (first[0].equals(twelve[0])) {
+                    return Integer.compare(Integer.parseInt(first[1]), Integer.parseInt(twelve[1]));
+                } else {
+                    return first[0].compareTo(twelve[0]);
                 }
-                bw.write(s.strip() + " - " + Arrays.toString(arr).replaceAll("[\\[\\]]", ""));
-                bw.newLine();
-            } catch (IOException e) {
-                Logger.getLogger("Error while writing" + e);
-            }
-        });
-        bw.flush();
-        bw.close();
-        br.close();
+            });
+            br.lines().forEach(s -> {
+                String[] keyValue = s.strip().split(" - ");
+                if (!map.containsKey(keyValue[1])) {
+                    map.put(keyValue[1], keyValue[0]);
+                } else {
+                    map.put(keyValue[1], map.get(keyValue[1]) + ", " + keyValue[0]);
+                }
+            });
+            map.forEach((s, s2) -> {
+                try {
+                    String[] arr = s2.strip().split(", ");
+                    if (arr.length > 1) {
+                        Arrays.sort(arr); //MergeSort, в принципе может конечно аж до GC раздуться, но в условиях данной задачи - допустимо
+                    }
+                    bw.write(s.strip() + " - " + Arrays.toString(arr).replaceAll("[\\[\\]]", ""));
+                    bw.newLine();
+                } catch (IOException e) {
+                    Logger.getLogger("Error while writing" + e);
+                }
+            });
+            bw.flush();
+        }
     }
 
     /**
@@ -139,29 +138,28 @@ public class JavaTasks {
      * 24.7
      * 99.5
      * 121.3
-     * Memory - O(N)
-     * Complexity - O(N log N)
+     * Memory - O(nk)
+     * Complexity - O(nk) // да, чёт фигню в прошлый раз написал...
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(inputName, StandardCharsets.UTF_8));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outputName, StandardCharsets.UTF_8));
-        List<Integer> temperatures = new ArrayList<>();
-        final int MIN_VALUE = 2730;
-        AtomicInteger max_value = new AtomicInteger(Integer.MIN_VALUE);
-        br.lines().forEach(s -> {
-            int num = (int) (Double.parseDouble(s) * 10 + MIN_VALUE);
-            if (num >= max_value.get()) max_value.set(num);
-            temperatures.add(num);
-        });
-        int[] outputData = Sorts.countingSort(temperatures, max_value);
-        for (int i: outputData) {
-            double outValue = (double) (i - MIN_VALUE) / 10;
-            bw.write(String.valueOf(outValue));
-            bw.newLine();
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName, StandardCharsets.UTF_8));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(outputName, StandardCharsets.UTF_8))) {
+            List<Integer> temperatures = new ArrayList<>();
+            final int MIN_VALUE = 2730;
+            AtomicInteger max_value = new AtomicInteger(Integer.MIN_VALUE);
+            br.lines().forEach(s -> {
+                int num = (int) (Double.parseDouble(s) * 10 + MIN_VALUE);
+                if (num >= max_value.get()) max_value.set(num);
+                temperatures.add(num);
+            });
+            int[] outputData = Sorts.countingSort(temperatures, max_value);
+            for (int i: outputData) {
+                double outValue = (double) (i - MIN_VALUE) / 10;
+                bw.write(String.valueOf(outValue));
+                bw.newLine();
+            }
+            bw.flush();
         }
-        bw.flush();
-        bw.close();
-        br.close();
     }
 
     /**

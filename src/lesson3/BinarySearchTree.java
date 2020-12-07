@@ -279,7 +279,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
     }
 
     public class BinarySearchTreeIterator implements Iterator<T> {
-        private final Stack<Node<T>> iteratorStack = new Stack<>();
+        private final Deque<Node<T>> iteratorStack = new ArrayDeque<>();
         Node<T> currentNode;
         private BinarySearchTreeIterator() {
             insertInLeftBranch(root);

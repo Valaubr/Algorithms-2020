@@ -1,6 +1,7 @@
 package lesson4;
 
 import java.util.*;
+
 import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,12 +11,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Trie extends AbstractSet<String> implements Set<String> {
 
-    private static class Node {
-        Map<Character, Node> children = new LinkedHashMap<>();
-    }
-
     private Node root = new Node();
-
     private int size = 0;
 
     @Override
@@ -84,16 +80,62 @@ public class Trie extends AbstractSet<String> implements Set<String> {
 
     /**
      * Итератор для префиксного дерева
-     *
+     * <p>
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
-     *
+     * <p>
      * Сложная
      */
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new TrieIterator();
     }
 
+    private static class Node {
+        Map<Character, Node> children = new LinkedHashMap<>();
+    }
+
+    private class TrieIterator implements Iterator<String> {
+        //По памяти мы имеем O(n) потому что очередь заполняется из дерева сразу вся.
+        private Queue<String> queue = new ArrayDeque<>();
+        private String lastReturned;
+        private String str = "";
+
+        TrieIterator() {
+            assert root != null;
+            getWords(root, str);
+        }
+
+        private void getWords(Node node, String str) {
+            for (char key : node.children.keySet()) {
+                if (key == (char) 0) queue.add(str);
+                else getWords(node.children.get(key), str + key);
+            }
+        }
+
+        // complexity: O( 1 )
+        // memory: O( n )
+        @Override
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        // complexity: O( 1 )
+        // memory: O( n )
+        @Override
+        public String next() {
+            if (!hasNext()) throw new IllegalStateException();
+            lastReturned = queue.peek();
+            return queue.poll();
+        }
+
+        // complexity: O( logN )
+        // memory: O( n )
+        @Override
+        public void remove() {
+            if (lastReturned == null) throw new IllegalStateException();
+            Trie.this.remove(lastReturned);
+            lastReturned = null;
+        }
+    }
 }
